@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "ES5",
+		"moduleResolution": "node",
+		"experimentalDecorators": true,
+		"noEmitOnError": true
+	},
+	"files": [
+		"src/index.ts",
+		"node_modules/typescript/lib/lib.es6.d.ts"
+	]
+}
