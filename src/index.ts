@@ -4,8 +4,14 @@ interface Stringable {
 
 export { Stringable };
 
+type Callable = { (): any };
+
 export type EachIterator<T> = (value: T, key: number) => Stringable;
-export type StringFunction = () => string;
+export type StringFunction = () => Stringable;
+
+function isFunction(f: any): f is { (...args: any[]): any } {
+	return typeof f === "function";
+}
 
 /**
  * Turns HTML-sensitive characters into HTML entities
@@ -66,7 +72,9 @@ export function $html(literalSections, ...substs) {
 
 	result += raw[raw.length - 1];
 
-	return result;
+	return {
+		toString: () => result
+	};
 }
 
 /**
@@ -89,14 +97,12 @@ export function $times(n: number, method: Function | string) {
 /**
  * Maps a list of values using the given function or string.
  */
-export function $map(collection: any[], method: EachIterator<any> | string): string[];
-export function $map<T extends {}>(collection: T[], method: EachIterator<T> | string): string[];
-export function $map<T extends {}>(collection: T[], method: EachIterator<T> | string): string[] {
+export function $map<T extends {}>(collection: T[], method: EachIterator<T> | Stringable): Stringable[] {
 	let buffer = [];
 	let len = collection.length;
 
 	for (let i = 0; i < len; i++) {
-		if (typeof method === "function") {
+		if (isFunction(method)) {
 			buffer.push(method(collection[i], i).toString());
 		} else {
 			buffer.push(method.toString());
@@ -110,7 +116,7 @@ export function $map<T extends {}>(collection: T[], method: EachIterator<T> | st
  * Maps all values of the collection using $map, then joins the array.
  * Use `$map` to get an array.
  */
-export function $each<T extends {}>(collection: T[], method: EachIterator<T> | string): string {
+export function $each<T extends {}>(collection: T[], method: EachIterator<T> | Stringable): Stringable {
 	return $map<T>(collection, method).join("");
 }
 
@@ -118,22 +124,22 @@ export function $each<T extends {}>(collection: T[], method: EachIterator<T> | s
  * Calls the given function with the given object as a parameter.
  * Useful for aliasing a value to a shorter name in a template.
  */
-export function $alias<T extends {}>(object: T, method: (v: T) => string): string {
+export function $alias<T extends {}>(object: T, method: (v: T) => Stringable): Stringable {
 	return method(object);
 }
 
 /**
  * Executes the function or string only if the condition given is truthy.
  */
-export function $if(condition: any, method: StringFunction | string, other?: StringFunction | string): string {
+export function $if(condition: any, method: StringFunction | Stringable, other?: StringFunction | Stringable): Stringable {
 	if (condition) {
-		if (typeof method === "function") {
+		if (isFunction(method)) {
 			return method();
 		} else if (method) {
 			return method;
 		}
 	} else {
-		if (typeof other === "function") {
+		if (isFunction(other)) {
 			return other();
 		} else if (other) {
 			return other;
