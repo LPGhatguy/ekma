@@ -1,10 +1,9 @@
 interface Stringable {
 	toString(): string;
+	safeInHTML?: boolean;
 }
 
 export { Stringable };
-
-type Callable = { (): any };
 
 export type EachIterator<T> = (value: T, key: number) => Stringable;
 export type StringFunction = () => Stringable;
@@ -27,19 +26,8 @@ export function escapeHTML(str: string) {
 }
 
 /**
- * Turns double quotes into HTML entities in the given text.
- */
-export function escapeQuotes(str: string) {
-	if (typeof str !== "string" || str.length === 0) {
-		return "";
-	}
-
-	return str.replace(/"/g, "&quot;");
-}
-
-/**
  * An HTML snippet that's escaped by default.
- * Use $${"data"} to escape an input.
+ * Use $${"data"} to skip escaping of an input.
  */
 export function $html(literalSections, ...substs) {
 	const raw = literalSections.raw;
@@ -55,7 +43,9 @@ export function $html(literalSections, ...substs) {
 		if (lit.endsWith("$")) {
 			lit = lit.slice(0, -1);
 		} else {
-			if (subst == null) {
+			if (subst.safeInHTML) {
+				subst = subst.toString();
+			} else if (subst == null) {
 				subst = "null";
 			} else {
 				subst = escapeHTML(subst.toString());
@@ -69,7 +59,10 @@ export function $html(literalSections, ...substs) {
 	result += raw[raw.length - 1];
 
 	return {
-		toString: () => result
+		toString() {
+			return result;
+		},
+		safeInHTML: true
 	};
 }
 
