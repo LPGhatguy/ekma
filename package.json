@@ -2,11 +2,11 @@
   "name": "ekma",
   "version": "0.2.0",
   "description": "Templating utilities for ES6 template strings",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "guh-core": "^1.4.0",
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "typescript": "^1.9.0-dev.20160613-1.0"
   },
   "scripts": {
     "build": "gulp"
