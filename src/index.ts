@@ -9,10 +9,6 @@ type Callable = { (): any };
 export type EachIterator<T> = (value: T, key: number) => Stringable;
 export type StringFunction = () => Stringable;
 
-function isFunction(f: any): f is { (...args: any[]): any } {
-	return typeof f === "function";
-}
-
 /**
  * Turns HTML-sensitive characters into HTML entities
  * Escapes all of &><"'`
@@ -102,7 +98,7 @@ export function $map<T extends {}>(collection: T[], method: EachIterator<T> | St
 	let len = collection.length;
 
 	for (let i = 0; i < len; i++) {
-		if (isFunction(method)) {
+		if (typeof method === "function") {
 			buffer.push(method(collection[i], i).toString());
 		} else {
 			buffer.push(method.toString());
@@ -133,13 +129,13 @@ export function $alias<T extends {}>(object: T, method: (v: T) => Stringable): S
  */
 export function $if(condition: any, method: StringFunction | Stringable, other?: StringFunction | Stringable): Stringable {
 	if (condition) {
-		if (isFunction(method)) {
+		if (typeof method === "function") {
 			return method();
 		} else if (method) {
 			return method;
 		}
 	} else {
-		if (isFunction(other)) {
+		if (typeof other === "function") {
 			return other();
 		} else if (other) {
 			return other;
