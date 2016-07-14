@@ -9,6 +9,14 @@ export type EachIterator<T> = (value: T, key: number) => Stringable;
 export type StringFunction = () => Stringable;
 
 /**
+ * Stopgap for checking of function args with TypeScript
+ * Remove when TypeScript 2.0 is released.
+ */
+function isFunction(object: any): object is Function {
+	return (typeof object === "function");
+}
+
+/**
  * Turns HTML-sensitive characters into HTML entities
  * Escapes all of &><"'`
  */
@@ -73,7 +81,7 @@ export function $times(n: number, method: Function | string) {
 	const buffer = [];
 
 	for (let i = 0; i < n; i += 1) {
-		if (typeof method === "function") {
+		if (isFunction(method)) {
 			buffer.push(method(i));
 		} else {
 			buffer.push(method);
@@ -91,7 +99,7 @@ export function $map<T extends {}>(collection: T[], method: EachIterator<T> | St
 	let len = collection.length;
 
 	for (let i = 0; i < len; i++) {
-		if (typeof method === "function") {
+		if (isFunction(method)) {
 			buffer.push(method(collection[i], i).toString());
 		} else {
 			buffer.push(method.toString());
@@ -122,13 +130,13 @@ export function $alias<T extends {}>(object: T, method: (v: T) => Stringable): S
  */
 export function $if(condition: any, method: StringFunction | Stringable, other?: StringFunction | Stringable): Stringable {
 	if (condition) {
-		if (typeof method === "function") {
+		if (isFunction(method)) {
 			return method();
 		} else if (method) {
 			return method;
 		}
 	} else {
-		if (typeof other === "function") {
+		if (isFunction(other)) {
 			return other();
 		} else if (other) {
 			return other;
