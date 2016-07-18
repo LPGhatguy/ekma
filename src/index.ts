@@ -77,7 +77,7 @@ export function $html(literalSections, ...substs) {
 /**
  * Executes the given string or function a given number of times.
  */
-export function $times(n: number, method: Function | string) {
+export function $times(n: number, method: Function | Stringable) {
 	const buffer = [];
 
 	for (let i = 0; i < n; i += 1) {
