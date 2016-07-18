@@ -41,7 +41,7 @@ The return value of the template is an object with a `toString` method and the p
 
 This API is using TypeScript syntax for expressing types. For additional details, check [the source](https://github.com/LPGhatguy/ekma/blob/master/src/index.ts) of the module.
 
-In these annotations, `Stringable` is an object that has a `toString` method.
+In these annotations, `Stringable` is an object that has a `toString` method, or is an actual string.
 
 - `escapeHTML(html: string)`
 	- escapes the given string as HTML
