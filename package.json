@@ -1,6 +1,6 @@
 {
   "name": "ekma",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Templating utilities for ES6 template strings",
   "dependencies": {},
   "devDependencies": {

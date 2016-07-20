@@ -51,10 +51,10 @@ export function $html(literalSections, ...substs) {
 		if (lit.endsWith("$")) {
 			lit = lit.slice(0, -1);
 		} else {
-			if (subst.safeInHTML) {
-				subst = subst.toString();
-			} else if (subst == null) {
+			if (subst == null) {
 				subst = "null";
+			} else if (subst.safeInHTML) {
+				subst = subst.toString();
 			} else {
 				subst = escapeHTML(subst.toString());
 			}
