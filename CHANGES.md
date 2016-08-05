@@ -1,5 +1,8 @@
 # ekma Changes
 
+## 0.3.1
+- Fixed escaping of `$html` values in `$if`
+
 ## 0.3.0
 - Added `$join` method for an automatic `safeInHTML` version of `Array#join`
 - `$each` and `$times` now correctly handle `safeInHTML` values
