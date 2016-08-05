@@ -13,7 +13,7 @@ ekma includes TypeScript typings out of the box.
 ekma requires an ES5 environment. That's it!
 
 ## Examples
-ekma templates are just functions that return strings and strings-like objects!
+ekma templates are just functions that return string-like objects!
 
 Use the `$html` template tag to automatically escape inputs to fit into HTML:
 
@@ -32,7 +32,7 @@ const template = () => $html`
 	`) }
 `;
 
-console.log(template());
+console.log(template().toString());
 ```
 
 The return value of the template is an object with a `toString` method and the property `safeInHTML` set to `true`.

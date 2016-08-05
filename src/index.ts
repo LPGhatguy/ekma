@@ -101,9 +101,9 @@ export function $map<T>(collection: T[], method: EachIterator<T> | Stringable): 
 
 	for (let i = 0; i < len; i++) {
 		if (isFunction(method)) {
-			buffer.push(method(collection[i], i).toString());
+			buffer.push(method(collection[i], i));
 		} else {
-			buffer.push(method.toString());
+			buffer.push(method);
 		}
 	}
 
