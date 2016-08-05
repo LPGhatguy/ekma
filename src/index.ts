@@ -35,9 +35,10 @@ export function escapeHTML(str: string) {
 
 /**
  * An HTML snippet that's escaped by default.
+ * Embedded instances of $html will not be extra-escaped.
  * Use $${"data"} to skip escaping of an input.
  */
-export function $html(literalSections, ...substs) {
+export function $html(literalSections, ...substs): Stringable {
 	const raw = literalSections.raw;
 	let result = "";
 
@@ -77,10 +78,10 @@ export function $html(literalSections, ...substs) {
 /**
  * Executes the given string or function a given number of times.
  */
-export function $times(n: number, method: Function | Stringable) {
+export function $times(count: number, method: Function | Stringable) {
 	const buffer = [];
 
-	for (let i = 0; i < n; i += 1) {
+	for (let i = 0; i < count; i += 1) {
 		if (isFunction(method)) {
 			buffer.push(method(i));
 		} else {
@@ -88,13 +89,13 @@ export function $times(n: number, method: Function | Stringable) {
 		}
 	}
 
-	return buffer.join("");
+	return $join(buffer);
 }
 
 /**
  * Maps a list of values using the given function or string.
  */
-export function $map<T extends {}>(collection: T[], method: EachIterator<T> | Stringable): Stringable[] {
+export function $map<T>(collection: T[], method: EachIterator<T> | Stringable): Stringable[] {
 	let buffer = [];
 	let len = collection.length;
 
@@ -113,15 +114,56 @@ export function $map<T extends {}>(collection: T[], method: EachIterator<T> | St
  * Maps all values of the collection using $map, then joins the array.
  * Use `$map` to get an array.
  */
-export function $each<T extends {}>(collection: T[], method: EachIterator<T> | Stringable): Stringable {
-	return $map<T>(collection, method).join("");
+export function $each<T>(collection: T[], method: EachIterator<T> | Stringable): Stringable {
+	const values = $map<T>(collection, method);
+
+	return $join(values);
+}
+
+/**
+ * Joins together a list of values and attempts to preserve safeInHTML if all values are.
+ */
+export function $join<T>(collection: T[]): Stringable {
+	let isMixed = false;
+	let isSafe: boolean;
+
+	for (const value of collection) {
+		const valueSafe = (value != null) && value["safeInHTML"];
+
+		if (isSafe == null) {
+			isSafe = valueSafe;
+		} else {
+			if (isSafe !== valueSafe) {
+				isMixed = true;
+			}
+
+			isSafe = isSafe && valueSafe;
+		}
+	}
+
+	const str = collection.join("");
+
+	if (isMixed) {
+		console.error("Mixed safe/unsafe content found in an ekma loop. This should be avoided as of ekma 0.3.0!");
+	}
+
+	if (isSafe) {
+		return {
+			toString() {
+				return str;
+			},
+			safeInHTML: true
+		};
+	} else {
+		return str;
+	}
 }
 
 /**
  * Calls the given function with the given object as a parameter.
  * Useful for aliasing a value to a shorter name in a template.
  */
-export function $alias<T extends {}>(object: T, method: (v: T) => Stringable): Stringable {
+export function $alias<T>(object: T, method: (v: T) => Stringable): Stringable {
 	return method(object);
 }
 

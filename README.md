@@ -28,7 +28,7 @@ const template = () => $html`
 	`) }
 
 	${ $each(myCollection, v => `
-		Value: ${v}
+		Value: ${ v }
 	`) }
 `;
 
@@ -62,7 +62,8 @@ In these annotations, `Stringable` is an object that has a `toString` method, or
 	- An `if` statement in function/expression form
 	- Returns the result of `pass` if the condition is `true`
 	- Otherwise returns the result of `fail`
-
+- `$join(collection: Stringable[])`
+	- Joins a collection of elements that may be safe in HTML
 
 ## Building
 Building requires Node.js 5 or newer.

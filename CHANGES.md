@@ -1,5 +1,11 @@
 # ekma Changes
 
+## 0.3.0
+- Added `$join` method for an automatic `safeInHTML` version of `Array#join`
+- `$each` and `$times` now correctly handle `safeInHTML` values
+	- This feature requires that all results are marked `safeInHTML`!
+- Relaxed type declarations on all iterators, they now default to `any` instead of `{}`.
+
 ## 0.2.2
 - Fixed error in `$html` with null values in substitutions
 
