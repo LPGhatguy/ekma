@@ -3,6 +3,8 @@
 npm install ekma --save
 ```
 
+**ekma is no longer maintained! I've moved on to using JSX and React variants for templating, as they handle escaping and composition with far less syntactic noise.**
+
 There are lots of templating languages and view systems for JS. Handlebars, Jade, Nunjucks, and React's JSX are just a few, and there are more every day! All of them expose a domain-specific language (DSL) and introduce plenty of complexity when all you want is regular JavaScript.
 
 The common untapped feature is ES6 template strings, which ekma aims to fix in a portable and flexible way. ekma works well whether you're running native ES6 or transpiling to ES5 via Babel, Traceur, or TypeScript!
